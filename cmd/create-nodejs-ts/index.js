@@ -107,7 +107,13 @@ App: ${app}
 
   PkgFieldsToKeep.forEach(field => {
     if (typeof pkg[field] !== 'undefined') {
-      newPkg[field] = pkg[field]
+      newPkg[field] =
+        field === 'scripts'
+          ? {
+              init: 'npm init && git init && commitizen init cz-conventional-changelog --save-dev --save-exact',
+              ...pkg[field]
+            }
+          : pkg[field]
     }
   })
 
