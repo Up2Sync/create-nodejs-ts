@@ -1,3 +1,6 @@
+# @up2sync/starter-output
+A fork of ["Node.js Starter ToolKit" by Vitor Hugo Salgado](https://github.com/vitorsalgado/create-nodejs-ts)
+
 <h1 align="center">Node.js Starter ToolKit</h1>
 
 <p align="center">

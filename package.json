@@ -1,5 +1,5 @@
 {
-  "name": "create-nodejs-ts",
+  "name": "@up2sync/create-nodejs-ts",
   "version": "2.0.1",
   "description": "NodeJS Starter Project Kit",
   "private": false,
@@ -17,23 +17,23 @@
     "test:coverage": "npm run test -- --coverage",
     "test:ci": "npm run test -- --colors --coverage --ci",
     "lint": "eslint --ext .ts,.js .",
-    "format": "prettier \"src/**\" --write --ignore-unknown",
-    "format:check": "prettier --check \"src/**\" --ignore-unknown"
+    "format": "prettier 'src/**' --write --ignore-unknown",
+    "format:check": "prettier --check 'src/**' --ignore-unknown"
   },
   "engines": {
     "node": ">=16"
   },
   "author": {
-    "name": "Vitor Hugo Salgado",
-    "email": "vsalgadopb@gmail.com",
-    "url": "https://github.com/vitorsalgado"
+    "name": "Wassim Gharbi",
+    "email": "gh.wass.93@gmail.com",
+    "url": "https://github.com/ghWass93"
   },
   "license": "MIT",
-  "repository": "git+https://github.com/vitorsalgado/create-nodejs-ts.git",
+  "repository": "git+https://github.com/Up2Sync/create-nodejs-ts.git",
   "bugs": {
-    "url": "https://github.com/vitorsalgado/create-nodejs-ts/issues"
+    "url": "https://github.com/Up2Sync/create-nodejs-ts/issues"
   },
-  "homepage": "https://github.com/vitorsalgado/create-nodejs-ts#readme",
+  "homepage": "https://github.com/Up2Sync/create-nodejs-ts#readme",
   "keywords": [
     "nodejs",
     "nodejs-boilerplate",
