@@ -1,6 +1,6 @@
 # Build Stage
 # ---
-FROM node:14 AS builder
+FROM node:16 AS builder
 WORKDIR /opt/app
 
 COPY package*.json ./
@@ -11,7 +11,7 @@ RUN rm -rf node_modules && npm i --production --ignore-scripts
 
 # Run Stage
 # ---
-FROM gcr.io/distroless/nodejs:14
+FROM gcr.io/distroless/nodejs:16
 
 USER nobody
 
@@ -22,4 +22,4 @@ ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
 ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
-CMD ["dist/index.js"]
+CMD ["dist/main.js"]

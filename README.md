@@ -14,9 +14,6 @@ A fork of ["Node.js Starter ToolKit" by Vitor Hugo Salgado](https://github.com/v
   <a href="https://www.npmjs.com/package/create-nodejs-ts">
     <img src="https://img.shields.io/npm/v/create-nodejs-ts.svg?logo=npm&logoColor=fff&label=NPM+package&color=limegreen" alt="npm" />
   </a>
-  <a href="https://nodejs.org/en/">
-    <img src="https://img.shields.io/node/v/create-nodejs-ts" alt="Node Min Version" />
-  </a>
   <a href="https://github.com/prettier/prettier">
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat" alt="Prettier"/>
   </a>
@@ -27,8 +24,8 @@ A fork of ["Node.js Starter ToolKit" by Vitor Hugo Salgado](https://github.com/v
 
 ## Overview
 
-Starter project for **Node.js** applications using **TypeScript** with Test, Lint, Code Style already configured. Take a
-look below for all the tooling available in this repository.  
+Starter project for **Node.js** applications using **TypeScript** with test, lint, code formatter already configured.
+Check the [tooling](#tooling) section for more details.  
 The preferable way to use this boilerplate is using `npx` command. You can use `npm init` too.  
 Use the following commands to bootstrap a new project:
 
@@ -53,17 +50,32 @@ All parameters available:
 --app=<APP_NAME> Defaults to my-app
 ```
 
-The final folder will the parameter `destination` concatenated with parameter `app`.
+The final folder will the parameter `destination`, if provided, concatenated with the parameter `app`.
+
+## ESM
+
+The project template now uses **ESM** by default.
+
+## Docker
+
+Minimalist docker image generation.  
+Check this [Dockerfile](build/docker/Dockerfile).
+
+## Local Dev Environment
+
+Run `make up` to spin up a local environment with **Docker Compose**.  
+Check this [docker-compose.yml](deployments/dev/docker-compose.yml) for more details.
 
 ## Tooling
 
+- ESM
 - TypeScript
+- Jest
 - EsLint
 - Husky
 - Commit Lint
 - Lint Staged
 - Prettier
-- Standard Version
 - Nodemon
 - Docker | Docker Compose
 
