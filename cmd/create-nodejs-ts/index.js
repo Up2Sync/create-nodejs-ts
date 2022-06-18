@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-const Path = require('path')
-const FsExt = require('fs-extra')
+import FsExt from 'fs-extra'
+import Path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const paramOr = (map, arg, def) => map.get(arg) || def
 const makePath = (...p) => Path.join(...p)
@@ -10,15 +13,18 @@ const ignoreContent =
   source =>
     !values.some(x => source === x)
 
-const Ignores = [
+const FilesToIgnore = [
   '.git',
   '.idea',
   '.vscode',
   '.github',
   '.husky/_',
+  '.yarn',
   '.yarn/cache',
   '.yarn/build-state.yml',
   '.yarn/install-state.gz',
+  '.yarnrc.yml',
+  '.versionrc.js',
   'cmd',
   'coverage',
   'dist',
@@ -35,29 +41,29 @@ const Ignores = [
   'CODE_OF_CONDUCT.md',
   'LICENSE',
   'README.md',
-  'Makefile',
   'package.json',
   'package-lock.json',
-  'yarn.lock'
+  'yarn.lock',
+  'tsconfig.build.tsbuildinfo',
 ]
 
-const NoDeps = ['fs-extra', 'standard-release']
+const DepsToIgnore = ['fs-extra', '@types/fs-extra', 'standard-release']
 
 const Templates = [
   { file: 'ci.yml', copyTo: '.github/workflows/ci.yml' },
   { file: 'README.md', copyTo: 'README.md' },
   { file: '.gitignore.husky', copyTo: '.husky/.gitignore' },
   { file: '.gitignore.root', copyTo: '.gitignore' },
-  { file: '.dockerignore.root', copyTo: '.dockerignore' }
+  { file: '.dockerignore.root', copyTo: '.dockerignore' },
 ]
 
-const PkgFieldsToKeep = ['scripts', 'dependencies', 'devDependencies']
+const PkgFieldsToKeep = ['type', 'main', 'types', 'scripts', 'dependencies', 'devDependencies']
 
 function main() {
   console.log('NodeJS Starter Kit - Bootstrapping New Project')
 
   const argv = process.argv.slice(2)
-  const argMap = new Map()
+  const args = new Map()
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
@@ -67,18 +73,18 @@ function main() {
       const key = match[1]
       const value = match[2]
 
-      argMap.set(key, value)
+      args.set(key, value)
     } else if (/^--.+/.test(arg)) {
       const key = arg.match(/^--(.+)/)[1]
       const next = argv[i + 1]
 
-      argMap.set(key, next)
+      args.set(key, next)
     }
   }
 
   const source = makePath(__dirname, '../..')
-  const dest = paramOr(argMap, 'destination', process.cwd()).trim()
-  const app = paramOr(argMap, 'app', 'my-app').trim()
+  const dest = paramOr(args, 'destination', process.cwd()).trim()
+  const app = paramOr(args, 'name', 'my-app').trim()
   const destination = makePath(dest, app)
 
   console.log(
@@ -86,40 +92,43 @@ function main() {
 Summary:
 Destination: ${destination}
 App: ${app}
-`
+`,
   )
 
   console.log('Copying Project Files ...')
 
-  FsExt.copySync(source, destination, { filter: ignoreContent(...Ignores.map(x => makePath(source, x))) })
+  FsExt.copySync(source, destination, { filter: ignoreContent(...FilesToIgnore.map(x => makePath(source, x))) })
 
   console.log('Copying Templates ...')
 
-  Templates.forEach(x => FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo)))
+  for (const x of Templates) {
+    FsExt.copySync(makePath(source, 'templates', x.file), makePath(destination, x.copyTo))
+  }
 
   console.log('Preparing package.json ...')
 
   const pkg = FsExt.readJsonSync(makePath(source, 'package.json'))
   const newPkg = {
     name: app,
-    main: 'dist/index.js'
   }
 
-  PkgFieldsToKeep.forEach(field => {
+  for (const field of PkgFieldsToKeep) {
     if (typeof pkg[field] !== 'undefined') {
       newPkg[field] = pkg[field]
     }
-  })
+  }
 
-  NoDeps.forEach(dep => {
-    if (pkg.dependencies[dep]) {
-      delete pkg.dependencies[dep]
+  for (const dep of DepsToIgnore) {
+    if (newPkg.dependencies[dep]) {
+      delete newPkg.dependencies[dep]
     }
 
-    if (pkg.devDependencies[dep]) {
-      delete pkg.dependencies[dep]
+    if (newPkg.devDependencies[dep]) {
+      delete newPkg.devDependencies[dep]
     }
-  })
+  }
+
+  delete newPkg.scripts.release
 
   FsExt.writeJsonSync(makePath(destination, 'package.json'), newPkg, { spaces: 2 })
 
@@ -128,4 +137,4 @@ App: ${app}
   return Promise.resolve()
 }
 
-main().catch(console.error)
+await main()
